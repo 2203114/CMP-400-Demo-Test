@@ -80,8 +80,14 @@ public class AI_Sensor : MonoBehaviour
 
         for (int i = 0; i <soundCount; i++)
         {
+
             GameObject sObj = soundColliders[i].gameObject;
-            soundObjects.Add(sObj);
+
+            if(sObj!=this.gameObject)
+            {
+                soundObjects.Add(sObj);
+            }
+           
         }
         
 
@@ -108,16 +114,18 @@ public class AI_Sensor : MonoBehaviour
             return false;
         }
 
-        Test test = obj.GetComponent<Test>();
+        Player player = obj.GetComponent<Player>();
 
-        if(test !=null)
+        if (player != null)
         {
-            if (test.testBool == true)
+            if (player.stealing == true)
             {
-                return true;
+                AiPatrol NPC = GetComponent<AiPatrol>();
+
+                NPC.alert = true;
             }
         }
-        return false;
+        return true;
     }
 
     Mesh CreateWedgeMesh()
@@ -222,32 +230,32 @@ public class AI_Sensor : MonoBehaviour
         scanInterval = 1.0f / scanFrequency;
     }
 
-    private void OnDrawGizmos()
-    {
-        if (mesh)
-        {
-            Gizmos.color = meshColor;
-            Gizmos.DrawMesh(mesh, transform.position, transform.rotation);
-        }
+    //private void OnDrawGizmos()
+    //{
+    //    if (mesh)
+    //    {
+    //        Gizmos.color = meshColor;
+    //        Gizmos.DrawMesh(mesh, transform.position, transform.rotation);
+    //    }
 
-        Gizmos.DrawWireSphere(transform.position, distance);
-        for (int i = 0; i < count; i++)
-        {
-            Gizmos.DrawSphere(colliders[i].transform.position, 1.0f);
-        }
+    //    Gizmos.DrawWireSphere(transform.position, distance);
+    //    for (int i = 0; i < count; i++)
+    //    {
+    //        Gizmos.DrawSphere(colliders[i].transform.position, 1.0f);
+    //    }
 
-        Gizmos.color = Color.green;
-        foreach (var obj in objects)
-        {
-            Gizmos.DrawSphere(obj.transform.position, 1.0f);
-        }
+    //    Gizmos.color = Color.green;
+    //    foreach (var obj in objects)
+    //    {
+    //        Gizmos.DrawSphere(obj.transform.position, 1.0f);
+    //    }
 
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, soundDistance);
+    //    Gizmos.color = Color.yellow;
+    //    Gizmos.DrawWireSphere(transform.position, soundDistance);
 
-        foreach (var obj in soundObjects)
-        {
-            Gizmos.DrawSphere(obj.transform.position, 1.0f);
-        }
-    }
+    //    foreach (var obj in soundObjects)
+    //    {
+    //        Gizmos.DrawSphere(obj.transform.position, 1.0f);
+    //    }
+    //}
 }

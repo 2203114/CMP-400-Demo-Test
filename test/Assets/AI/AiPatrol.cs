@@ -14,6 +14,8 @@ public class AiPatrol : MonoBehaviour
 
     NavMeshAgent agent;
 
+    public Renderer mat;
+
     [SerializeField] LayerMask groundLayer;
 
     Vector3 destPoint;
@@ -29,6 +31,16 @@ public class AiPatrol : MonoBehaviour
 
     float curiosityValue, willingnessToHelpValue, bussynessValue = 0.0f;
     string state;
+
+    public bool alert;
+
+    Vector3 CrimainalPos;
+    bool atCrim = false;
+
+    AiPatrol NPCS;
+
+    public int shoutInterval;
+    float shoutTimer;
 
 
     void CompairStats()
@@ -59,7 +71,9 @@ public class AiPatrol : MonoBehaviour
                 state = "helping";
             }
         }
-        
+
+        shoutTimer = Random.Range(0, shoutInterval);
+
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -69,6 +83,10 @@ public class AiPatrol : MonoBehaviour
         CompairStats();
 
         sensor = GetComponent<AI_Sensor>();
+
+        mat = GetComponent<Renderer>();
+
+        mat.material.SetColor("_BaseColor",Color.green);
     }
 
     // Update is called once per frame
@@ -91,31 +109,93 @@ public class AiPatrol : MonoBehaviour
        // }
      
 
-       if (sensor.objects.Count>0)
+       if (alert)
         {
             if(state == "lurking")
             {
-                transform.LookAt(sensor.objects[0].transform);
+                if (sensor.objects.Count != 0)
+                {
+                    transform.LookAt(sensor.objects[0].transform);
+                }
+
+                shoutTimer -= Time.deltaTime;
+                if(shoutTimer<0)
+                {
+                    shoutTimer += shoutInterval;
+                    Shout();
+                }
+
+                walkRange = 10;
+                Patrol();
+                mat.material.SetColor("_BaseColor", Color.purple);
+                
+
             }
             
             if (state == "helping")
             {
-                agent.SetDestination(sensor.objects[0].transform.position);
+                if (sensor.objects.Count != 0)
+                {
+                   
+                    CrimainalPos = sensor.objects[0].transform.position;
+
+                    if (Vector3.Distance(transform.position, CrimainalPos) < 5)
+                    {
+                        // print(Vector3.Distance(transform.position, CrimainalPos));
+                        agent.isStopped = true; ;
+                        atCrim = true;
+                    }
+                    else
+                    {
+                        agent.isStopped = false; ;
+                        atCrim = false;
+                    }
+
+                    if (!atCrim)
+                    {
+                        agent.SetDestination(CrimainalPos);
+                    }
+                }
+
+                //shoutTimer -= Time.deltaTime;
+                //if (shoutTimer < 0)
+                //{
+                //    shoutTimer += shoutInterval;
+                //    Shout();
+                //}
+
+                mat.material.SetColor("_BaseColor", Color.blue);
             }
 
-            else
+            if(state=="bussy")
             {
-               // Patrol();
+                mat.material.SetColor("_BaseColor", Color.orange);
+                Patrol();
             }
 
         }
         else
         {
-           // Patrol();
+            Patrol();
         }
 
 
 
+    }
+
+    void Shout()
+    {
+        if (sensor.soundObjects.Count !=0)
+        {
+           for (int i = 0; i < sensor.soundObjects.Count; i++)
+            {
+                NPCS = sensor.soundObjects[i].GetComponent<AiPatrol>();
+                if (NPCS != null)
+                {
+                    NPCS.alert = true;
+                }
+            }
+        }
     }
 
     void Patrol()
@@ -137,5 +217,11 @@ public class AiPatrol : MonoBehaviour
         {
             walkPointSet = true;
         }
+    }
+
+
+    void CheckForTheft()
+    {
+
     }
 }

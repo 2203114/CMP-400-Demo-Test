@@ -8,14 +8,16 @@ public class Player : MonoBehaviour
 
     public Test test;
 
+    public bool stealing;
 
+    public Renderer rend;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         test = GetComponent<Test>();
-       
-
+        rend = GetComponent<Renderer>();
+        rend.material.SetColor("_BaseColor", Color.blueViolet);
     }
 
     // Update is called once per frame
@@ -23,11 +25,13 @@ public class Player : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.S))
         {
-            test.testBool = false;
+            stealing = false;
+            rend.material.SetColor("_BaseColor", Color.blueViolet);
         }
         if (Input.GetKeyDown(KeyCode.W))
         {
-            test.testBool = true;
+            stealing = true;
+            rend.material.SetColor("_BaseColor", Color.red);
         }
     }
 }
