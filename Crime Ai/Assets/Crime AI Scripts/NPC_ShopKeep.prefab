@@ -298,46 +298,19 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2faa610713d3b3c439473daa55e8c60a, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 110671980927849642}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2faa610713d3b3c439473daa55e8c60a, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 3800966285694810712}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2faa610713d3b3c439473daa55e8c60a, type: 3}
       insertIndex: -1
       addedObject: {fileID: 445391827291698090}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 2faa610713d3b3c439473daa55e8c60a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6063253290415254147}
   m_SourcePrefab: {fileID: 100100000, guid: 2faa610713d3b3c439473daa55e8c60a, type: 3}
 --- !u!1 &2616814055978860584 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 2faa610713d3b3c439473daa55e8c60a, type: 3}
   m_PrefabInstance: {fileID: 2923297219108126073}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &110671980927849642
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2616814055978860584}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15d838ab60126964a9c1d48871f4c9e1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NPC_AI_Sensor
-  distance: 10
-  soundDistance: 20
-  angle: 30
-  height: 1
-  debugMeshColor: {r: 1, g: 0, b: 0, a: 1}
-  scanFrequency: 30
-  layers:
-    serializedVersion: 2
-    m_Bits: 0
-  soundLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  objects: []
-  soundObjects: []
-  isGuard: 0
 --- !u!114 &3800966285694810712
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -351,6 +324,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NPC_ShopKeep
   isBeingStolenFrom: 0
+  animator: {fileID: 0}
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  sensor: {fileID: 0}
+  itemValue: 0
+  fear: 0
+  bystanderEffect: 0
+  alert: 0
+  lawEnforcementLocations: []
 --- !u!65 &445391827291698090
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -372,3 +355,32 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 2, z: 1}
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &6063253290415254147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2616814055978860584}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15d838ab60126964a9c1d48871f4c9e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NPC_AI_Sensor
+  distance: 10
+  soundDistance: 10
+  bystanderDistance: 15
+  angle: 30
+  height: 1
+  debugMeshColor: {r: 1, g: 0, b: 0, a: 1}
+  scanFrequency: 30
+  layers:
+    serializedVersion: 2
+    m_Bits: 128
+  soundLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  objects: []
+  soundObjects: []
+  bystanderObjects: []
+  isGuard: 0

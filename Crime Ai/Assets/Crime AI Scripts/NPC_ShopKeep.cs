@@ -94,6 +94,17 @@ public class NPC_ShopKeep : MonoBehaviour
 
     }
 
+    private void RandomlySetStats()
+    {
+        itemValue = Random.Range(0.0f, 1.0f);
+        itemValue = Mathf.Round(itemValue * 10.0f) * 0.1f;
+
+        fear = Random.Range(0.0f, 1.0f);
+        fear = Mathf.Round(fear * 10.0f) * 0.1f;
+
+    }
+
+
     public void GettenStolenFrom(GameObject player)
     {
         isBeingStolenFrom = true;
@@ -104,6 +115,10 @@ public class NPC_ShopKeep : MonoBehaviour
         lookat.z = player.transform.position.z;
 
         transform.LookAt(lookat);
+
+        bystanderEffect = (sensor.bystanderObjects.Count / 2) * 0.1f;
+
+       // Debug.Log(bystanderEffect);
 
     }
 }

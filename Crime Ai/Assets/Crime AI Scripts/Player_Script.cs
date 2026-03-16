@@ -3,6 +3,16 @@ using System.Collections.Specialized;
 using System.Security.Cryptography;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
+public enum Player_Descriptions
+{
+    black_Clothes,
+    yellow_Clothes,
+    purple_Clothes,
+    green_Clothes
+}
+
 
 public class Player_Script : MonoBehaviour
 {
@@ -30,12 +40,15 @@ public class Player_Script : MonoBehaviour
     public float stealingInterval = 10;
 
 
-    public float lockMovementTimer = 10;
-    public float lockMovementInterval = 10;
+    public float lockMovementTimer = 3;
+    public float lockMovementInterval = 3;
     public bool stealing = false;
 
 
+    public Player_Descriptions clothes;
 
+
+    public GameObject endPoint;
 
 
     /// 
@@ -53,11 +66,18 @@ public class Player_Script : MonoBehaviour
 
         input_Mangaer = GetComponent<Input_Mangaer>();
 
+        SetRandomClothes(); 
+
     }
 
     // Update is called once per frame
     void Update()
     {
+        if(Vector3.Distance(transform.position,endPoint.transform.position)<3)
+        {
+            SceneManager.LoadScene(2);
+        }
+
         isGrounded = controller.isGrounded;
 
         if(tryingTosteal)
@@ -92,6 +112,36 @@ public class Player_Script : MonoBehaviour
 
 
     }
+
+    void SetRandomClothes()
+    {
+        int rnd = Random.Range(1, 4);
+
+        switch(rnd)
+        {
+            case 1:
+                clothes = Player_Descriptions.black_Clothes;
+                break;
+
+            case 2:
+                clothes = Player_Descriptions.yellow_Clothes;
+                break;
+
+            case 3:
+                clothes = Player_Descriptions.purple_Clothes;
+                break;
+
+            case 4:
+                clothes = Player_Descriptions.green_Clothes;
+                break;
+        }
+    }
+
+    public Player_Descriptions GetDescription()
+    {
+        return clothes;
+    }
+
     // receive inputs from input manager
     public void ProcessMove(Vector2 inputs)
     {
@@ -120,8 +170,7 @@ public class Player_Script : MonoBehaviour
 
     public void Stealing(GameObject shopKeep)
     {
-        Debug.Log("yippi");
-
+       
         stealing = true;
 
         shopKeep.GetComponent<NPC_ShopKeep>().GettenStolenFrom(transform.gameObject);

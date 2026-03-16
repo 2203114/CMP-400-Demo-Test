@@ -150,8 +150,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NPC_AI_Sensor
   distance: 10
-  soundDistance: 20
-  angle: 30
+  soundDistance: 15
+  bystanderDistance: 30
+  angle: 50
   height: 2
   debugMeshColor: {r: 1, g: 0, b: 0, a: 1}
   scanFrequency: 30
@@ -163,6 +164,7 @@ MonoBehaviour:
     m_Bits: 256
   objects: []
   soundObjects: []
+  bystanderObjects: []
   isGuard: 1
 --- !u!114 &4913019270319765650
 MonoBehaviour:
@@ -189,6 +191,12 @@ MonoBehaviour:
   isPartoling: 0
   walkRange: 0
   animator: {fileID: 0}
+  debugState: 
+  chasingTimer: 5
+  chasingInterval: 5
+  lastKnownPlayerLocation: {x: 0, y: 0, z: 0}
+  beenToLKPL: 0
+  player_Description: 0
 --- !u!95 &5917652773861931499
 Animator:
   serializedVersion: 7

@@ -9,6 +9,7 @@ public class AI_Sensor : MonoBehaviour
 {
     public float distance = 10;
     public float soundDistance = 20;
+    public float bystanderDistance = 30;
 
     public float angle = 30;
     public float height = 1.0f;
@@ -23,14 +24,20 @@ public class AI_Sensor : MonoBehaviour
 
     public List<GameObject> soundObjects = new List<GameObject>();
 
+    public List<GameObject> bystanders = new List<GameObject>();
+
 
     Collider[] colliders = new Collider[50];
 
     Collider[] soundColliders = new Collider[25];
 
+    Collider[] bystanderColliders = new Collider[20];
+
+
 
     int count;
     int soundCount;
+    int bystanderCount;
 
 
     float scanInterval;
@@ -38,7 +45,7 @@ public class AI_Sensor : MonoBehaviour
 
     Mesh mesh;
 
- 
+
 
 
 
@@ -53,7 +60,7 @@ public class AI_Sensor : MonoBehaviour
     void Update()
     {
         scanTimer -= Time.deltaTime;
-        if(scanTimer < 0)
+        if (scanTimer < 0)
         {
             scanTimer += scanInterval;
             Scan();
@@ -78,18 +85,34 @@ public class AI_Sensor : MonoBehaviour
         soundCount = Physics.OverlapSphereNonAlloc(transform.position, soundDistance, soundColliders, soundLayer, QueryTriggerInteraction.Collide);
         soundObjects.Clear();
 
-        for (int i = 0; i <soundCount; i++)
+        for (int i = 0; i < soundCount; i++)
         {
 
             GameObject sObj = soundColliders[i].gameObject;
 
-            if(sObj!=this.gameObject)
+            if (sObj != this.gameObject)
             {
                 soundObjects.Add(sObj);
             }
-           
+
         }
-        
+
+        if (GetComponent<NPC_ShopKeep>() != null)
+        {
+            bystanderCount = Physics.OverlapSphereNonAlloc(transform.position, bystanderDistance, bystanderColliders, soundLayer, QueryTriggerInteraction.Collide);
+            bystanders.Clear();
+            //Debug.Log(bystanderCount);
+            for (int i = 0; i < bystanderCount; i++)
+            {
+                GameObject bObj = bystanderColliders[i].gameObject;
+
+                if (bObj != this.gameObject)
+                {
+                    bystanders.Add(bObj);
+                }
+            }
+        }
+
 
     }
 
@@ -99,7 +122,7 @@ public class AI_Sensor : MonoBehaviour
         Vector3 dest = obj.transform.position;
         Vector3 direction = dest - origin;
 
-        
+
 
         if (direction.y < 0 || direction.y > height)
         {
@@ -109,7 +132,7 @@ public class AI_Sensor : MonoBehaviour
         direction.y = 0;
 
         float deltaAngle = Vector3.Angle(direction, transform.forward);
-        if(deltaAngle > angle)
+        if (deltaAngle > angle)
         {
             return false;
         }
@@ -133,7 +156,7 @@ public class AI_Sensor : MonoBehaviour
         Mesh mesh = new Mesh();
 
         int segments = 10;
-        int numOfTriangles = (segments*4)+2+2;
+        int numOfTriangles = (segments * 4) + 2 + 2;
         int numVertices = numOfTriangles * 3;
 
         Vector3[] vertices = new Vector3[numVertices];
@@ -150,7 +173,7 @@ public class AI_Sensor : MonoBehaviour
         int vert = 0;
 
         // left side 
-        
+
         vertices[vert++] = bottomCenter;
         vertices[vert++] = bottomLeft;
         vertices[vert++] = topLeft;
@@ -172,14 +195,14 @@ public class AI_Sensor : MonoBehaviour
 
         float currentAngle = -angle;
         float deltaAngle = (angle * 2) / segments;
-        for (int i = 0; i<segments; i++)
+        for (int i = 0; i < segments; i++)
         {
 
-           
+
             bottomLeft = Quaternion.Euler(0, currentAngle, 0) * Vector3.forward * distance;
             bottomRight = Quaternion.Euler(0, currentAngle + deltaAngle, 0) * Vector3.forward * distance;
 
-         
+
             topRight = bottomRight + Vector3.up * height;
             topLeft = bottomLeft + Vector3.up * height;
 
@@ -205,14 +228,14 @@ public class AI_Sensor : MonoBehaviour
             vertices[vert++] = bottomRight;
             vertices[vert++] = bottomLeft;
 
-            currentAngle += deltaAngle; 
+            currentAngle += deltaAngle;
         }
 
 
 
-     
 
-        for (int i = 0 ; i < numVertices; i++)
+
+        for (int i = 0; i < numVertices; i++)
         {
             triangles[i] = i;
         }
@@ -230,32 +253,33 @@ public class AI_Sensor : MonoBehaviour
         scanInterval = 1.0f / scanFrequency;
     }
 
-    //private void OnDrawGizmos()
-    //{
-    //    if (mesh)
-    //    {
-    //        Gizmos.color = meshColor;
-    //        Gizmos.DrawMesh(mesh, transform.position, transform.rotation);
-    //    }
+    private void OnDrawGizmos()
+    {
+        if (mesh)
+        {
+            Gizmos.color = meshColor;
+            Gizmos.DrawMesh(mesh, transform.position, transform.rotation);
+        }
 
-    //    Gizmos.DrawWireSphere(transform.position, distance);
-    //    for (int i = 0; i < count; i++)
-    //    {
-    //        Gizmos.DrawSphere(colliders[i].transform.position, 1.0f);
-    //    }
+        Gizmos.DrawWireSphere(transform.position, distance);
+        for (int i = 0; i < count; i++)
+        {
+            Gizmos.DrawSphere(colliders[i].transform.position, 1.0f);
+        }
 
-    //    Gizmos.color = Color.green;
-    //    foreach (var obj in objects)
-    //    {
-    //        Gizmos.DrawSphere(obj.transform.position, 1.0f);
-    //    }
+        //    Gizmos.color = Color.green;
+        //    foreach (var obj in objects)
+        //    {
+        //        Gizmos.DrawSphere(obj.transform.position, 1.0f);
+        //    }
 
-    //    Gizmos.color = Color.yellow;
-    //    Gizmos.DrawWireSphere(transform.position, soundDistance);
+        //    Gizmos.color = Color.yellow;
+        //    Gizmos.DrawWireSphere(transform.position, soundDistance);
 
-    //    foreach (var obj in soundObjects)
-    //    {
-    //        Gizmos.DrawSphere(obj.transform.position, 1.0f);
-    //    }
-    //}
+        //    foreach (var obj in soundObjects)
+        //    {
+        //        Gizmos.DrawSphere(obj.transform.position, 1.0f);
+        //    }
+        //}
+    }
 }

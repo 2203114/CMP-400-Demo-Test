@@ -146,6 +146,12 @@ MonoBehaviour:
   currentNPCs: {fileID: 0}
   crimeScene: {x: 0, y: 0, z: 0}
   beenToCrimeSceen: 0
+  player_Description: 0
+  chasingTimer: 5
+  chasingInterval: 5
+  lastKnownPlayerLocation: {x: 0, y: 0, z: 0}
+  beenToLKPL: 0
+  seenPlayer: 0
 --- !u!195 &4066547488712831794
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -182,7 +188,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NPC_AI_Sensor
   distance: 10
   soundDistance: 10
-  angle: 30
+  bystanderDistance: 15
+  angle: 50
   height: 2
   debugMeshColor: {r: 1, g: 0, b: 0, a: 1}
   scanFrequency: 30
@@ -196,3 +203,5 @@ MonoBehaviour:
   soundObjects:
   - {fileID: 0}
   - {fileID: 0}
+  bystanderObjects: []
+  isGuard: 0

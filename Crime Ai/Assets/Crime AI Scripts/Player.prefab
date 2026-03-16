@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5728761923945641302}
   - component: {fileID: -6836430770790235887}
   - component: {fileID: 5908321958579792290}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -51,6 +51,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Player_Script
   gravity: -9.8
   speed: 5
+  tryingTosteal: 0
+  stealingTimer: 10
+  stealingInterval: 10
+  lockMovementTimer: 10
+  lockMovementInterval: 10
+  stealing: 0
+  clothes: 0
 --- !u!143 &5728761923945641302
 CharacterController:
   m_ObjectHideFlags: 0
@@ -88,6 +95,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eabb08c17fd5b174991af855e3ee1886, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Input_Mangaer
+  stealTimer: 0
+  stealInterval: 30
+  movementLocked: 0
 --- !u!114 &5908321958579792290
 MonoBehaviour:
   m_ObjectHideFlags: 0

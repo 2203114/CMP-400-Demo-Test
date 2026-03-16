@@ -26,7 +26,9 @@ public class Npc_Civillian : MonoBehaviour
 
     NavMeshAgent agent;
     
-    public Renderer mat;
+    public SkinnedMeshRenderer mat;
+
+   
 
     [SerializeField] LayerMask groundLayer;
 
@@ -84,8 +86,22 @@ public class Npc_Civillian : MonoBehaviour
     bool reachedGuard;
 
 
+    public Player_Descriptions player_Description;
+
+    public float chasingTimer = 5f;
+    public float chasingInterval = 5f;
+
+    public Vector3 lastKnownPlayerLocation;
+    public bool beenToLKPL = false;
+
+    private GameObject player;
+
+    public bool seenPlayer = false;
+
+    private Vector3 guardStation;
 
 
+    public Animator animator;
 
     /// 
     /// Varibales
@@ -97,13 +113,17 @@ public class Npc_Civillian : MonoBehaviour
 
         sensor = GetComponent<NPC_AI_Sensor>();
 
-        mat = GetComponent<Renderer>();
+       
 
-        mat.material.SetColor("_BaseColor", Color.green);
+       
+
+       // mat.material.SetColor("_BaseColor", Color.green);
 
         // Getting stat values
         RandomlySetStats();
-    
+
+
+        animator = GetComponent<Animator>();
 
         shoutTimer = Random.Range(0, shoutInterval);
     }
@@ -113,12 +133,26 @@ public class Npc_Civillian : MonoBehaviour
 
     private void Update()
     {
+        if(agent.isStopped)
+        {
+            animator.SetFloat("Speed", 0f);
+        }
+        else if(!agent.isStopped)
+        {
+            animator.SetFloat("Speed", 0.2f);
+        }
+
+
         DeFuzzyFication();
         if (alert)
         {
             if(!justAlerted)
             {
-                agent.isStopped = true;
+                //agent.isStopped = true;
+                agent.SetDestination(transform.position);
+
+                bystanderEffect = (sensor.bystanderObjects.Count / 2) * 0.1f;
+
                 justAlerted = true;
             }
 
@@ -126,29 +160,61 @@ public class Npc_Civillian : MonoBehaviour
             {
                 case NPC_States.Interfere:
                     agent.isStopped = false;
-                    if (sensor.objects.Count != 0)
+
+                    if (sensor.objects.Count == 0 && seenPlayer)
                     {
-
-                        CrimainalPos = sensor.objects[0].transform.position;
-
-                        if (Vector3.Distance(transform.position, CrimainalPos) < 5)
+                        chasingTimer -= Time.deltaTime;
+                        if (chasingTimer <= 0)
                         {
-                            // print(Vector3.Distance(transform.position, CrimainalPos));
-                            agent.isStopped = true; ;
-                            reachedCriminal = true;
-                        }
-                        else
-                        {
-                            agent.isStopped = false; ;
-                            reachedCriminal = false;
-                        }
 
-                        if (!reachedCriminal)
-                        {
-                            agent.SetDestination(CrimainalPos);
+                            lastKnownPlayerLocation = player.transform.position;
+                            player = null;
+                            chasingTimer = chasingInterval;
+                            seenPlayer = false;
+
                         }
                     }
-                    else if(!beenToCrimeSceen && crimeScene!=null)
+
+
+                    if (sensor.objects.Count != 0 || player != null)
+                    {
+
+
+                        if (sensor.objects.Count != 0)
+                        {
+                            player = sensor.objects[0].transform.gameObject;
+                            seenPlayer = true;
+
+
+                            chasingTimer = chasingInterval;
+                        }
+                       
+                        if(player.GetComponent<Player_Script>().GetDescription() == player_Description)
+                        {
+
+                            if (Vector3.Distance(transform.position, player.transform.position) < 5)
+                            {
+                                // print(Vector3.Distance(transform.position, CrimainalPos));
+                                agent.SetDestination(transform.position);
+                                reachedCriminal = true;
+                            }
+                            else
+                            {
+                                agent.SetDestination(player.transform.position);
+                            }
+
+                            Vector3 lookat;
+                            lookat.x = player.transform.position.x;
+                            lookat.y = 0;
+                            lookat.z = player.transform.position.z;
+
+                            transform.LookAt(lookat);
+                        }
+                        //CrimainalPos = sensor.objects[0].transform.position;
+
+                      
+                    }
+                    else if(!beenToCrimeSceen && crimeScene!=null && !seenPlayer)
                     {
                         agent.SetDestination(crimeScene);
 
@@ -163,6 +229,7 @@ public class Npc_Civillian : MonoBehaviour
                         RandomWander();
                     }
 
+                   // mat.color = Color.darkGreen;
                     mat.material.SetColor("_BaseColor", Color.darkGreen);
 
                     break;
@@ -178,8 +245,12 @@ public class Npc_Civillian : MonoBehaviour
                         {
                             targetedGuard.alert = true;
                             targetedGuard.crimeScene = crimeScene;
+                            targetedGuard.player_Description = player_Description;
+
                             foundClosestLawEnforment = true;
-                            reachedGuard = true;
+
+
+                           // reachedGuard = true;
                             targetedGuard = null;
                         }
                         else
@@ -207,8 +278,8 @@ public class Npc_Civillian : MonoBehaviour
                                     }
                                     else
                                     {
-                                        foundClosestLawEnforment = true;
-                                        reachedGuard = true;
+                                        //foundClosestLawEnforment = true;
+                                       // reachedGuard = true;
                                     }
 
                                 }
@@ -216,7 +287,7 @@ public class Npc_Civillian : MonoBehaviour
                         }
 
 
-                        if (!foundClosestLawEnforment)
+                        if (targetedGuard==null && !reachedGuard)
                         {
 
                             for (int i = 0; i < lawEnforcementLocations.Count; i++)
@@ -227,26 +298,29 @@ public class Npc_Civillian : MonoBehaviour
                             if (obj != null)
                             {
                                 agent.isStopped = false;
-                                agent.SetDestination(obj.transform.position);
+                                if (obj != null)
+                                {
+                                    if (Vector3.Distance(transform.position, obj.transform.position) < 5)
+                                    {
+                                        reachedGuard = true;
+                                        guardStation = obj.transform.position;
+
+                                    }
+                                    else
+                                    {
+                                        agent.SetDestination(obj.transform.position);
+                                    }
+                                }
+                               
                                 // debugList++;
                             }
                             foundClosestLawEnforment = true;
 
                         }
-                        else
-                        {
-                            if (obj != null)
-                            {
-                                if (Vector3.Distance(transform.position, obj.transform.position) < 5)
-                                {
-                                    reachedGuard = true;
-                                }
-                            }
-
-                            
-                        }
+                      
                         if(reachedGuard)
                         {
+                            walkRange = 5;
                             RandomWander();
                         }
                        
@@ -275,14 +349,45 @@ public class Npc_Civillian : MonoBehaviour
                     //}
 
                     Shout();
+
+                   // mat.color = Color.purple;
                     mat.material.SetColor("_BaseColor", Color.purple);
                     break;
 
                 case NPC_States.Leaving:
-                    //agent.isStopped = false;
+                    agent.isStopped = false;
+
+                    if(sensor.objects.Count!=0)
+                    {
+                        Vector3 direction = (transform.position - sensor.objects[0].transform.position).normalized;
+
+                        agent.SetDestination(transform.position + direction);
+
+                        Vector3 lookat;
+                        lookat.x = sensor.objects[0].transform.position.x;
+                        lookat.y = 0;
+                        lookat.z = sensor.objects[0].transform.position.z;
+
+                        transform.LookAt(lookat);
+
+                    }
+                    else
+                    {
+                        Vector3 direction = (transform.position - crimeScene).normalized;
+                        if (Vector3.Distance(transform.position, crimeScene) < 30)
+                        {
+                            agent.SetDestination(transform.position + direction);
+
+                        }
+                        else
+                        {
+                            RandomWander();
+                        }
+                    }
 
 
-                    Vector3 direction = (transform.position - crimeScene).normalized;
+
+                    //mat.color = Color.yellow;
                     mat.material.SetColor("_BaseColor", Color.yellow);
                     break;
 
@@ -291,9 +396,21 @@ public class Npc_Civillian : MonoBehaviour
                     agent.isStopped = false;
                     if (sensor.objects.Count != 0)
                     {
-                        transform.LookAt(sensor.objects[0].transform);
+                        Vector3 lookat;
+                        lookat.x = sensor.objects[0].transform.position.x;
+                        lookat.y = 0;
+                        lookat.z = sensor.objects[0].transform.position.z;
+
+                        transform.LookAt(lookat);        
+                        
+                        if(Vector3.Distance(sensor.objects[0].transform.position,transform.position)<15)
+                        {
+                            Vector3 direction = (transform.position - sensor.objects[0].transform.position).normalized;
+
+                            agent.SetDestination(transform.position + direction);
+                        }
                     }
-                    if (!beenToCrimeSceen)
+                   else if (!beenToCrimeSceen)
                     {
                         agent.SetDestination(crimeScene);
                         if (Vector3.Distance(transform.position, crimeScene) < 10)
@@ -304,14 +421,14 @@ public class Npc_Civillian : MonoBehaviour
                     }
                     else
                     {
-                        walkRange = 10;
+                        walkRange = 5;
                         RandomWander();
                     }
 
 
-                   
-                    
 
+
+                    //mat.color = Color.beige;
                     mat.material.SetColor("_BaseColor", Color.beige);
                     break;
             }
@@ -396,15 +513,17 @@ public class Npc_Civillian : MonoBehaviour
                         {
                             NPCs.alert = true;
                             NPCs.crimeScene = crimeScene;
+                            NPCs.player_Description = player_Description;
                         }
                     }
-                    else
+                    else if (sensor.soundObjects[i].GetComponent<Npc_Guard>() != null)
                     {
                         Npc_Guard guard = sensor.soundObjects[i].GetComponent<Npc_Guard>();
                         if(guard.alert!=true)
                         {
                             guard.alert = true;
                             guard.crimeScene = crimeScene;
+                            guard.player_Description = player_Description;
 
                         }
                     }
@@ -419,6 +538,7 @@ public class Npc_Civillian : MonoBehaviour
         }
         else
         {
+           
 
             RandomWander();
         }
@@ -437,8 +557,8 @@ public class Npc_Civillian : MonoBehaviour
         fear = Random.Range(0.0f, 1.0f);
         fear = Mathf.Round(fear * 10.0f) * 0.1f;
 
-        bystanderEffect = Random.Range(0.0f, 1.0f);
-        bystanderEffect = Mathf.Round(bystanderEffect * 10.0f) * 0.1f;
+        //bystanderEffect = Random.Range(0.0f, 1.0f);
+        //bystanderEffect = Mathf.Round(bystanderEffect * 10.0f) * 0.1f;
     }
 
     void DeFuzzyFication()
@@ -504,15 +624,64 @@ public class Npc_Civillian : MonoBehaviour
 
     void SearchForDest()
     {
-        float z = Random.Range(-walkRange, walkRange);
-        float x = Random.Range(-walkRange, walkRange);
-
-        destPoint = new Vector3(transform.position.x + x, transform.position.y, transform.position.z + z);
+      
 
 
-        if (Physics.Raycast(destPoint, Vector3.down, groundLayer))
+        if(currentState == NPC_States.Involved)
         {
-            walkPointSet = true;
+            float z = Random.Range(-walkRange, walkRange);
+            float x = Random.Range(-walkRange, walkRange);
+
+            destPoint = new Vector3(guardStation.x + x, guardStation.y, guardStation.z + z);
+          
+            if (Physics.Raycast(destPoint, Vector3.down, groundLayer))
+            {
+                walkPointSet = true;
+            }
+        }
+        else if(currentState == NPC_States.lurking)
+        {
+            float z = Random.Range(-walkRange, walkRange);
+            float x = Random.Range(-walkRange, walkRange);
+
+            destPoint = new Vector3(crimeScene.x + x, crimeScene.y, crimeScene.z + z);
+
+
+            if (Physics.Raycast(destPoint, Vector3.down, groundLayer))
+            {
+                walkPointSet = true;
+            }
+        }
+        else if (currentState == NPC_States.Leaving)
+        {
+            float z = Random.Range(-walkRange, walkRange);
+            float x = Random.Range(-walkRange, walkRange);
+
+            destPoint = new Vector3(transform.position.x + x, transform.position.y, transform.position.z + z);
+            do
+            {
+                float tempz = Random.Range(-walkRange, walkRange);
+                float tempx = Random.Range(-walkRange, walkRange);
+
+                destPoint = new Vector3(transform.position.x + tempx, transform.position.y, transform.position.z + tempz);
+            } while (Vector3.Distance(crimeScene, destPoint) < 30);
+            if (Physics.Raycast(destPoint, Vector3.down, groundLayer))
+            {
+                walkPointSet = true;
+            }
+        }
+        else
+        {
+            float tempz = Random.Range(-walkRange, walkRange);
+            float tempx = Random.Range(-walkRange, walkRange);
+
+            destPoint = new Vector3(transform.position.x + tempx, transform.position.y, transform.position.z + tempz);
+            if (Physics.Raycast(destPoint, Vector3.down, groundLayer))
+            {
+                walkPointSet = true;
+            }
+
+            
         }
     }
 
@@ -521,7 +690,13 @@ public class Npc_Civillian : MonoBehaviour
         if (!walkPointSet) SearchForDest();
         if (walkPointSet) agent.SetDestination(destPoint);
         if (Vector3.Distance(transform.position, destPoint) < 10) walkPointSet = false;
+        if (agent.pathStatus == NavMeshPathStatus.PathPartial) walkPointSet = false;
     }
-  
+
+
+    public void SetPlayerDescription(Player_Descriptions playerDisc)
+    {
+        player_Description = playerDisc;
+    }
 
 }

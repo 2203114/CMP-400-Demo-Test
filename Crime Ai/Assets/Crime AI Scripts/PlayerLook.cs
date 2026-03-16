@@ -38,7 +38,7 @@ public class PlayerLook : MonoBehaviour
 
         RaycastHit hit;
 
-        if(Physics.Raycast(cam.transform.position, cam.transform.forward, out hit,100))
+        if(Physics.Raycast(cam.transform.position, cam.transform.forward, out hit,2))
         {
             if(hit.transform.GetComponent<NPC_ShopKeep>()!=null)
             {

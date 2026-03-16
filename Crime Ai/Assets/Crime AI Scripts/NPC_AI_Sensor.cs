@@ -13,6 +13,8 @@ public class NPC_AI_Sensor : MonoBehaviour
     // distances for sight and hearing
     public float distance = 10;
     public float soundDistance = 20;
+    public float bystanderDistance = 30;
+
 
     // sight cone
     public float angle = 30.0f;
@@ -27,12 +29,17 @@ public class NPC_AI_Sensor : MonoBehaviour
     // lists for the game object that are seen and heard
     public List<GameObject> objects = new List<GameObject>();
     public List<GameObject> soundObjects = new List<GameObject>();
+    public List<GameObject> bystanderObjects = new List<GameObject>();
+
 
     Collider[] colliders = new Collider[50];
     Collider[] soundColliders = new Collider[25];
+    Collider[] bystanderColliders = new Collider[20];
 
     int count;
     int soundCount;
+    int bystanderCount;
+
 
     float scanInterval;
     float scanTimer;
@@ -94,6 +101,23 @@ public class NPC_AI_Sensor : MonoBehaviour
         }
 
 
+        
+        bystanderCount = Physics.OverlapSphereNonAlloc(transform.position, bystanderDistance, bystanderColliders, soundLayer, QueryTriggerInteraction.Collide);
+        bystanderObjects.Clear();
+
+            //Debug.Log(bystanderCount);
+
+        for(int i = 0; i < bystanderCount; i++)
+        {
+            GameObject bObj = bystanderColliders[i].gameObject;
+
+            if (bObj != this.gameObject)
+            {
+                bystanderObjects.Add(bObj);
+            }
+        }
+
+
     }
     public bool IsInSight(GameObject obj)
     {
@@ -116,27 +140,59 @@ public class NPC_AI_Sensor : MonoBehaviour
             return false;
         }
 
-        Player player = obj.GetComponent<Player>();
+        Player_Script player = obj.GetComponent<Player_Script>();
 
         if (player != null)
         {
             if (player.stealing == true)
             {
-                if (isGuard)
+                if (GetComponent<Npc_Guard>() != null)
                 {
                     Npc_Guard NPC = GetComponent<Npc_Guard>();
                     NPC.crimeScene = player.transform.position;
                     NPC.alert = true;
+
+                    NPC.SetPlayerDescription(player.GetDescription());
+
                 }
-                else
+                else if (GetComponent<Npc_Civillian>() != null)
                 {
                     Npc_Civillian NPC = GetComponent<Npc_Civillian>();
                     NPC.crimeScene = player.transform.position;
                     NPC.alert = true;
+
+                    NPC.SetPlayerDescription(player.GetDescription());
                 }
+                //else if (GetComponent<NPC_ShopKeep>() != null)
+                //{
+
+                //}
 
                
                
+            }
+            else
+            {
+                if (GetComponent<Npc_Guard>() != null)
+                {
+                    Npc_Guard NPC = GetComponent<Npc_Guard>();
+                    if(NPC.player_Description!=player.GetDescription())
+                    {
+                        return false;
+                    }
+
+                    
+
+                }
+                else if (GetComponent<Npc_Civillian>() != null)
+                {
+                    Npc_Civillian NPC = GetComponent<Npc_Civillian>();
+
+                    if (NPC.player_Description != player.GetDescription())
+                    {
+                        return false;
+                    }
+                }
             }
         }
         return true;
@@ -240,32 +296,46 @@ public class NPC_AI_Sensor : MonoBehaviour
         scanInterval = 1.0f / scanFrequency;
     }
 
-    //private void OnDrawGizmos()
-    //{
-    //    if (mesh)
-    //    {
-    //        Gizmos.color = debugMeshColor;
-    //        Gizmos.DrawMesh(mesh, transform.position, transform.rotation);
-    //    }
+    private void OnDrawGizmos()
+    {
+        //if (mesh)
+        //{
+        //    Gizmos.color = debugMeshColor;
+        //    Gizmos.DrawMesh(mesh, transform.position, transform.rotation);
+        //}
 
-    //    Gizmos.DrawWireSphere(transform.position, distance);
-    //    for (int i = 0; i < count; i++)
-    //    {
-    //        Gizmos.DrawSphere(colliders[i].transform.position, 1.0f);
-    //    }
+        //Gizmos.DrawWireSphere(transform.position, distance);
+        //for (int i = 0; i < count; i++)
+        //{
+        //    Gizmos.DrawSphere(colliders[i].transform.position, 1.0f);
+        //}
 
-    //    Gizmos.color = Color.green;
-    //    foreach (var obj in objects)
-    //    {
-    //        Gizmos.DrawSphere(obj.transform.position, 1.0f);
-    //    }
+        //Gizmos.color = Color.green;
+        //foreach (var obj in objects)
+        //{
+        //    Gizmos.DrawSphere(obj.transform.position, 1.0f);
+        //}
 
-    //    Gizmos.color = Color.yellow;
-    //    Gizmos.DrawWireSphere(transform.position, soundDistance);
+        //Gizmos.color = Color.yellow;
+        //Gizmos.DrawWireSphere(transform.position, soundDistance);
 
-    //    foreach (var obj in soundObjects)
-    //    {
-    //        Gizmos.DrawSphere(obj.transform.position, 1.0f);
-    //    }
-    //}
+        //foreach (var obj in soundObjects)
+        //{
+        //    Gizmos.DrawSphere(obj.transform.position, 1.0f);
+        //}
+
+        //if (GetComponent<NPC_ShopKeep>() != null)
+        //{
+        //    Gizmos.color = Color.yellow;
+        //    Gizmos.DrawWireSphere(transform.position, bystanderDistance);
+
+        //    foreach (var obj in bystanderObjects)
+        //    {
+        //        Gizmos.DrawSphere(obj.transform.position, 1.0f);
+        //    }
+        //}
+
+
+
+    }
 }
