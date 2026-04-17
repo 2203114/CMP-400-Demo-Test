@@ -1,0 +1,40 @@
+Time until the first crime was comitted: 10 Seconds.
+Time until a guard was alerted: 27 Seconds.
+Time until player was caught: 241 Seconds.
+
+15 Civillian npcs were influenced by other Civillian npcs behaviours.
+
+Player comitted crime: 4 times.
+
+There is: 101 Civillian npcs.
+There were: 10 Civillian npcs who witnessed the player commit a crime.
+There were: 1 Civillian npcs who were in state Idle
+There were: 13 Civillian npcs who were in state Interfere.
+There were: 14 Civillian npcs who were in state Involved.
+There were: 15 Civillian npcs who were in state Leaving.
+There were: 33 Civillian npcs who were in state Lurking.
+There were: 25 Civillian npcs who were in state Semi_Involved.
+
+There were: 9 Civillian npcs who were in sub state Chase_player.
+There were: 5 Civillian npcs who were in sub state Protect_shopkeep.
+There were: 5 Civillian npcs who were in sub state Inform_Guards.
+
+There is: 6 Shopkeeper npcs.
+There were: 1 Shopkeeper npcs who entered Seek_Help state at one point.
+There were: 2 Shopkeeper npcs who entered Shouting state at one point.
+There were: 0 Shopkeeper npcs who entered Chase_Of_Player state at one point.
+There were: 1 Shopkeeper npcs who entered Back_Up_From_Player state at one point.
+
+The player changed their apperance 1 times.
+The players final apperance was: green_Clothes.
+
+There were 100 Civillian npcs who thought Black_Clothes was player apperance.
+There were 0 Civillian npcs who thought Purple_Clothes was player apperance.
+There were 0 Civillian npcs who thought Yellow_Clothes was player apperance.
+There were 1 Civillian npcs who thought Green_Clothes was player apperance.
+
+There is: 9 Guard npcs.
+There were 9 Guard npcs who thought Black_Clothes was player apperance.
+There were 0 Guard npcs who thought Purple_Clothes was player apperance.
+There were 0 Guard npcs who thought Yellow_Clothes was player apperance.
+There were 0 Guard npcs who thought Green_Clothes was player apperance.

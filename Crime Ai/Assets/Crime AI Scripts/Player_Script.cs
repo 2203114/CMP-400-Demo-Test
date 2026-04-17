@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 
 public enum Player_Descriptions
 {
+    Default,
     black_Clothes,
     yellow_Clothes,
     purple_Clothes,
@@ -50,6 +51,17 @@ public class Player_Script : MonoBehaviour
 
     public GameObject endPoint;
 
+    public GameObject dataObject;
+    public DataCollector dataCollector;
+
+    bool firstTimeComittingCrime = true;
+
+    int howManyCrimes = 0;
+
+    public bool changing = false;
+    public float changingTimer = 3;
+    public float changingTimerInterval = 3;
+
 
     /// 
     /// Variables
@@ -66,7 +78,10 @@ public class Player_Script : MonoBehaviour
 
         input_Mangaer = GetComponent<Input_Mangaer>();
 
-        SetRandomClothes(); 
+        SetRandomClothes();
+
+        dataCollector = dataObject.GetComponent<DataCollector>();
+        dataCollector.player_Description = clothes;
 
     }
 
@@ -75,6 +90,7 @@ public class Player_Script : MonoBehaviour
     {
         if(Vector3.Distance(transform.position,endPoint.transform.position)<3)
         {
+            dataCollector.playerEscaped = true;
             SceneManager.LoadScene(2);
         }
 
@@ -82,8 +98,11 @@ public class Player_Script : MonoBehaviour
 
         if(tryingTosteal)
         {
-            playerLook.StealCheck();
-
+            if(!stealing)
+            {
+                playerLook.StealCheck();
+            }
+          
             stealingTimer -= Time.deltaTime;
             if(stealingTimer<=0)
             {
@@ -101,6 +120,35 @@ public class Player_Script : MonoBehaviour
                 stealing = false;
                 lockMovementTimer = lockMovementInterval;
                 input_Mangaer.movementLocked = false;
+
+                if(firstTimeComittingCrime)
+                {
+                    dataCollector.firstCrimeComitted = true;
+                    firstTimeComittingCrime = false;
+                }
+
+                howManyCrimes++;
+                dataCollector.numberOfCrimes = howManyCrimes;
+            }
+            else
+            {
+                input_Mangaer.movementLocked = true;            
+            }
+
+        }
+
+        if(changing)
+        {
+            changingTimer -= Time.deltaTime;
+
+            if(changingTimer<=0)
+            {
+                ChangeClothing();
+                input_Mangaer.movementLocked = false;
+                changingTimer = changingTimerInterval;
+                changing = false;
+                dataCollector.numberOfClothesChange += 1;
+                dataCollector.player_Description = clothes;
             }
             else
             {
@@ -109,7 +157,7 @@ public class Player_Script : MonoBehaviour
 
         }
 
-
+        
 
     }
 
@@ -175,6 +223,28 @@ public class Player_Script : MonoBehaviour
 
         shopKeep.GetComponent<NPC_ShopKeep>().GettenStolenFrom(transform.gameObject);
 
+    }
+
+    public void ChangeClothing()
+    {
+        switch(clothes)
+        {
+            case Player_Descriptions.black_Clothes:
+                clothes = Player_Descriptions.green_Clothes;
+                break;
+
+            case Player_Descriptions.green_Clothes:
+                clothes = Player_Descriptions.purple_Clothes;
+                break;
+
+            case Player_Descriptions.purple_Clothes:
+                clothes = Player_Descriptions.yellow_Clothes;
+                break;
+
+            case Player_Descriptions.yellow_Clothes:
+                clothes = Player_Descriptions.black_Clothes;
+                break;
+        }
     }
 
 }

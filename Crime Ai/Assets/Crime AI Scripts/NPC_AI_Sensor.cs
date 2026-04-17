@@ -160,28 +160,63 @@ public class NPC_AI_Sensor : MonoBehaviour
                     Npc_Civillian NPC = GetComponent<Npc_Civillian>();
                     NPC.crimeScene = player.transform.position;
                     NPC.alert = true;
+                    NPC.isWitness = true;
+                    NPC.SetPlayerDescription(player.GetDescription());
+                }
+                else if (GetComponent<NPC_ShopKeep>() != null)
+                {
+                    NPC_ShopKeep NPC = GetComponent<NPC_ShopKeep>();
 
                     NPC.SetPlayerDescription(player.GetDescription());
                 }
-                //else if (GetComponent<NPC_ShopKeep>() != null)
-                //{
 
-                //}
 
-               
-               
+
             }
+            //else if (player.changing)
+            //{
+            //    if (GetComponent<Npc_Guard>() != null)
+            //    {
+            //        Npc_Guard NPC = GetComponent<Npc_Guard>();
+            //        if (NPC.alert && player.clothes == NPC.player_Description)
+            //        {
+            //            NPC.crimeScene = player.transform.position;
+            //            NPC.SetPlayerDescription(player.GetDescription());
+            //        }
+                  
+                   
+
+            //    }
+            //    else if (GetComponent<Npc_Civillian>() != null)
+            //    {
+            //        Npc_Civillian NPC = GetComponent<Npc_Civillian>();
+
+
+            //        if (NPC.alert && player.clothes == NPC.player_Description)
+            //        {
+            //            NPC.crimeScene = player.transform.position;
+            //            NPC.SetPlayerDescription(player.GetDescription());
+            //        }                  
+            //    }
+            //    else if (GetComponent<NPC_ShopKeep>() != null)
+            //    {
+            //        NPC_ShopKeep NPC = GetComponent<NPC_ShopKeep>();
+
+            //        NPC.SetPlayerDescription(player.GetDescription());
+            //    }
+            //}
+
             else
             {
                 if (GetComponent<Npc_Guard>() != null)
                 {
                     Npc_Guard NPC = GetComponent<Npc_Guard>();
-                    if(NPC.player_Description!=player.GetDescription())
+                    if (NPC.player_Description != player.GetDescription())
                     {
                         return false;
                     }
 
-                    
+
 
                 }
                 else if (GetComponent<Npc_Civillian>() != null)

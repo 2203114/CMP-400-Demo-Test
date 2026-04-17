@@ -16,6 +16,10 @@ public class Input_Mangaer : MonoBehaviour
     public float stealTimer = 0;
     public float stealInterval = 30;
 
+    public float changeTimer = 0;
+    public float changeInterval = 30;
+
+
     public bool movementLocked = false;
 
     
@@ -62,6 +66,16 @@ public class Input_Mangaer : MonoBehaviour
             stealTimer += stealInterval;
         }
 
+        if(changeTimer>0)
+        {
+            changeTimer -= Time.deltaTime;
+        }
+
+        if(onfoot.ChangeClothes.ReadValue<float>()==1 && changeTimer <= 0)
+        {
+            playerScript.changing = true;          
+            changeTimer += changeInterval;
+        }
 
         
     }

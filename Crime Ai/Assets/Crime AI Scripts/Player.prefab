@@ -54,10 +54,11 @@ MonoBehaviour:
   tryingTosteal: 0
   stealingTimer: 10
   stealingInterval: 10
-  lockMovementTimer: 10
-  lockMovementInterval: 10
+  lockMovementTimer: 3
+  lockMovementInterval: 3
   stealing: 0
   clothes: 0
+  endPoint: {fileID: 0}
 --- !u!143 &5728761923945641302
 CharacterController:
   m_ObjectHideFlags: 0

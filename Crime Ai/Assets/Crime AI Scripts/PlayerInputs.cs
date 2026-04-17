@@ -118,6 +118,15 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ChangeClothes"",
+                    ""type"": ""Button"",
+                    ""id"": ""edb0573a-01bd-4f6c-9b6f-a08feac9d374"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -197,6 +206,17 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""action"": ""Steal"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6302061d-39e6-429f-bf83-1d8dce04eabd"",
+                    ""path"": ""<Keyboard>/c"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ChangeClothes"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -208,6 +228,7 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         m_OnFoot_Movement = m_OnFoot.FindAction("Movement", throwIfNotFound: true);
         m_OnFoot_Look = m_OnFoot.FindAction("Look", throwIfNotFound: true);
         m_OnFoot_Steal = m_OnFoot.FindAction("Steal", throwIfNotFound: true);
+        m_OnFoot_ChangeClothes = m_OnFoot.FindAction("ChangeClothes", throwIfNotFound: true);
     }
 
     ~@PlayerInputs()
@@ -291,6 +312,7 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
     private readonly InputAction m_OnFoot_Movement;
     private readonly InputAction m_OnFoot_Look;
     private readonly InputAction m_OnFoot_Steal;
+    private readonly InputAction m_OnFoot_ChangeClothes;
     /// <summary>
     /// Provides access to input actions defined in input action map "OnFoot".
     /// </summary>
@@ -314,6 +336,10 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "OnFoot/Steal".
         /// </summary>
         public InputAction @Steal => m_Wrapper.m_OnFoot_Steal;
+        /// <summary>
+        /// Provides access to the underlying input action "OnFoot/ChangeClothes".
+        /// </summary>
+        public InputAction @ChangeClothes => m_Wrapper.m_OnFoot_ChangeClothes;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -349,6 +375,9 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
             @Steal.started += instance.OnSteal;
             @Steal.performed += instance.OnSteal;
             @Steal.canceled += instance.OnSteal;
+            @ChangeClothes.started += instance.OnChangeClothes;
+            @ChangeClothes.performed += instance.OnChangeClothes;
+            @ChangeClothes.canceled += instance.OnChangeClothes;
         }
 
         /// <summary>
@@ -369,6 +398,9 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
             @Steal.started -= instance.OnSteal;
             @Steal.performed -= instance.OnSteal;
             @Steal.canceled -= instance.OnSteal;
+            @ChangeClothes.started -= instance.OnChangeClothes;
+            @ChangeClothes.performed -= instance.OnChangeClothes;
+            @ChangeClothes.canceled -= instance.OnChangeClothes;
         }
 
         /// <summary>
@@ -430,5 +462,12 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnSteal(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "ChangeClothes" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnChangeClothes(InputAction.CallbackContext context);
     }
 }

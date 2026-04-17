@@ -1,0 +1,26 @@
+Time until the first crime was comitted: 25 Seconds.
+Time until a guard was alerted: 24 Seconds.
+Time until player was caught: 51 Seconds.
+
+1 Civillian npcs were influenced by other Civillian npcs behaviours.
+
+Player comitted crime: 1 times.
+
+There is: 101 Civillian npcs.
+There were: 15 Civillian npcs who witnessed the player commit a crime.
+There were: 83 Civillian npcs who were in state Idle
+There were: 1 Civillian npcs who were in state Interfere.
+There were: 8 Civillian npcs who were in state Involved.
+There were: 0 Civillian npcs who were in state Leaving.
+There were: 3 Civillian npcs who were in state Lurking.
+There were: 6 Civillian npcs who were in state Semi_Involved.
+
+There were: 1 Civillian npcs who were in sub state Chase_player.
+There were: 0 Civillian npcs who were in sub state Protect_shopkeep.
+There were: 6 Civillian npcs who were in sub state Inform_Guards.
+
+There is: 6 Shopkeeper npcs.
+There were: 0 Shopkeeper npcs who entered Seek_Help state at one point.
+There were: 0 Shopkeeper npcs who entered Shouting state at one point.
+There were: 0 Shopkeeper npcs who entered Chase_Of_Player state at one point.
+There were: 0 Shopkeeper npcs who entered Back_Up_From_Player state at one point.

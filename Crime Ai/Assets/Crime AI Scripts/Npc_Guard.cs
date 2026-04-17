@@ -69,6 +69,12 @@ public class Npc_Guard : MonoBehaviour
 
     public Player_Descriptions player_Description;
 
+    public GameObject dataCollectorObj;
+    public DataCollector DataCollector;
+
+    bool justAlerted = false;
+
+
     
     /// 
     /// Variables 
@@ -85,6 +91,9 @@ public class Npc_Guard : MonoBehaviour
         mat = GetComponent<Material>();
 
         animator = GetComponent<Animator>();
+
+        DataCollector = dataCollectorObj.GetComponent<DataCollector>();
+        DataCollector.Guards.Add(transform.gameObject);
 
         //mat.material.SetColor("_BaseColor", Color.blue);
 
@@ -125,18 +134,24 @@ public class Npc_Guard : MonoBehaviour
         //    animator.SetFloat("Speed", 0f);
         //}
 
-        if (agent.isStopped)
-        {
-            animator.SetFloat("Speed", 0f);
-        }
-        else if (!agent.isStopped)
-        {
-            animator.SetFloat("Speed", 0.2f);
-        }
+        //if (agent.isStopped)
+        //{
+        //    animator.SetFloat("Speed", 0f);
+        //}
+        //else if (!agent.isStopped)
+        //{
+        //    animator.SetFloat("Speed", 0.2f);
+        //}
 
 
         if (alert)
         {
+            if(!justAlerted)
+            {
+                DataCollector.SetGuardsAlert(true);
+                justAlerted = true;
+            }
+
             if(currentState == NPC_Guard_States.Chasing && sensor.objects.Count == 0)
             {
                 chasingTimer -= Time.deltaTime;
@@ -156,9 +171,9 @@ public class Npc_Guard : MonoBehaviour
                 currentState = NPC_Guard_States.Chasing;
 
                 debugState = "Chasing";
+                animator.SetFloat("Speed", 0.2f);
 
-
-                if(sensor.objects.Count != 0)
+                if (sensor.objects.Count != 0)
                 {
                     player = sensor.objects[0].transform.gameObject;
 
@@ -174,6 +189,7 @@ public class Npc_Guard : MonoBehaviour
                     {
                         if (Vector3.Distance(transform.position, player.transform.position) < 2)
                         {
+                            DataCollector.SetPlayerCaught(true);
                             agent.SetDestination(transform.position);
                             SceneManager.LoadScene(1);
 
@@ -198,8 +214,8 @@ public class Npc_Guard : MonoBehaviour
                 currentState = NPC_Guard_States.Investigate;
 
                 debugState = "investigating";
-
-                if(!beenToLKPL)
+                animator.SetFloat("Speed", 0.2f);
+                if (!beenToLKPL)
                 {
                     agent.SetDestination(lastKnownPlayerLocation);
                     if (Vector3.Distance(transform.position, lastKnownPlayerLocation) < 5)
@@ -214,7 +230,7 @@ public class Npc_Guard : MonoBehaviour
                 {
                     agent.SetDestination(crimeScene);
 
-                    if(Vector3.Distance(transform.position,crimeScene)<5)
+                    if(Vector3.Distance(transform.position,crimeScene)<10)
                     {
                         beenToCrimeSceen = true;
                     }
@@ -239,7 +255,8 @@ public class Npc_Guard : MonoBehaviour
 
                     debugState = "guarding";
 
-                   // animator.SetFloat("Speed", 0.0f);
+                    animator.SetFloat("Speed", 0f);
+                    // animator.SetFloat("Speed", 0.0f);
                     Guarding();
 
                     break;
@@ -249,6 +266,7 @@ public class Npc_Guard : MonoBehaviour
 
                     debugState = "patroling";
                     //animator.SetFloat("Speed", 0.1f);
+                    animator.SetFloat("Speed", 0.2f);
                     Patroling();
 
                     break;

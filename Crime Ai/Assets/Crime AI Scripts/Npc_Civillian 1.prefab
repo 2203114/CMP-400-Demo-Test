@@ -327,7 +327,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NPC_AI_Sensor
   distance: 10
-  soundDistance: 10
+  soundDistance: 6
   bystanderDistance: 15
   angle: 50
   height: 2
@@ -365,7 +365,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Npc_Civillian
   mat: {fileID: 6113050470615899510}
-  mesh: {fileID: 0}
   groundLayer:
     serializedVersion: 2
     m_Bits: 64
@@ -374,6 +373,11 @@ MonoBehaviour:
   empathy: 0
   fear: 0
   bystanderEffect: 0
+  trustInLaw: 0
+  confidence: 0
+  inflience: 0
+  influencedState: 0
+  currentState: 0
   debugState: 
   alert: 0
   lawEnforcementLocations: []
@@ -392,6 +396,9 @@ MonoBehaviour:
   beenToLKPL: 0
   seenPlayer: 0
   animator: {fileID: 0}
+  dataCollectorObj: {fileID: 0}
+  dataCollector: {fileID: 0}
+  isWitness: 0
 --- !u!65 &4851346471890592492
 BoxCollider:
   m_ObjectHideFlags: 0
