@@ -32,6 +32,7 @@ public class PlayerLook : MonoBehaviour
         transform.Rotate(Vector3.up * (mouseX * Time.deltaTime) * xSensitivity);
     }
 
+    //check if player is looking at a shopkeep
     public void StealCheck()
     {
         Debug.DrawRay(cam.transform.position, cam.transform.forward,Color.red);

@@ -6,6 +6,12 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 
+///
+///  sound varibales are for nearby npcs should have changed the name earlier but it is now to late 
+///
+
+
+
 // Civilina npc posible states
 public enum NPC_States
 {
@@ -602,10 +608,6 @@ public class Npc_Civillian : MonoBehaviour
                     currentNPCs.alert = true;
                     currentNPCs.crimeScene = crimeScene;
 
-                    //if(currentNPCs.empathy+0.2<=1)
-                    //{
-                    //    currentNPCs.empathy += 0.2f;
-                    //}
                     reachedOtherNpc = true;
                 }
             }
@@ -740,10 +742,6 @@ public class Npc_Civillian : MonoBehaviour
 
     void DeFuzzyFication()
     {
-        // Trust in police
-        // confidence
-        // when checking for bystanders get how many npc are doing what then get a inflience value 
-
         if (fear >= empathy)
         {
             if(bystanderEffect >= 0.5 && fear <= 0.5)

@@ -49,6 +49,7 @@ public class DataCollector : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Timers
         if(!guardsAlerted)
         {
             timeForGuardsToBeAlerted += Time.deltaTime;
@@ -141,6 +142,9 @@ public class DataCollector : MonoBehaviour
         }
     }
 
+    /// 
+    /// Many Many Geters
+    /// 
     int GetHowManyWitnesses()
     {
         int countOfWitnesses = 0;

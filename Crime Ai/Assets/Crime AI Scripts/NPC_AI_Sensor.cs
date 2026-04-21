@@ -6,6 +6,13 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class NPC_AI_Sensor : MonoBehaviour
 {
+    ///
+    ///  sound varibales are for nearby npcs should have changed the name earlier but it is now to late 
+    ///
+
+
+
+
     /// 
     /// Varibales
     /// 
@@ -70,7 +77,7 @@ public class NPC_AI_Sensor : MonoBehaviour
         }
     }
 
-
+    //scan for vision nearby npc and bystander radius
     private void Scan()
     {
         count = Physics.OverlapSphereNonAlloc(transform.position, distance, colliders, layers, QueryTriggerInteraction.Collide);
@@ -99,9 +106,7 @@ public class NPC_AI_Sensor : MonoBehaviour
             }
 
         }
-
-
-        
+  
         bystanderCount = Physics.OverlapSphereNonAlloc(transform.position, bystanderDistance, bystanderColliders, soundLayer, QueryTriggerInteraction.Collide);
         bystanderObjects.Clear();
 
@@ -119,6 +124,7 @@ public class NPC_AI_Sensor : MonoBehaviour
 
 
     }
+    //check if player is in sight
     public bool IsInSight(GameObject obj)
     {
         Vector3 origin = transform.position;
@@ -169,43 +175,8 @@ public class NPC_AI_Sensor : MonoBehaviour
 
                     NPC.SetPlayerDescription(player.GetDescription());
                 }
-
-
-
             }
-            //else if (player.changing)
-            //{
-            //    if (GetComponent<Npc_Guard>() != null)
-            //    {
-            //        Npc_Guard NPC = GetComponent<Npc_Guard>();
-            //        if (NPC.alert && player.clothes == NPC.player_Description)
-            //        {
-            //            NPC.crimeScene = player.transform.position;
-            //            NPC.SetPlayerDescription(player.GetDescription());
-            //        }
-                  
-                   
-
-            //    }
-            //    else if (GetComponent<Npc_Civillian>() != null)
-            //    {
-            //        Npc_Civillian NPC = GetComponent<Npc_Civillian>();
-
-
-            //        if (NPC.alert && player.clothes == NPC.player_Description)
-            //        {
-            //            NPC.crimeScene = player.transform.position;
-            //            NPC.SetPlayerDescription(player.GetDescription());
-            //        }                  
-            //    }
-            //    else if (GetComponent<NPC_ShopKeep>() != null)
-            //    {
-            //        NPC_ShopKeep NPC = GetComponent<NPC_ShopKeep>();
-
-            //        NPC.SetPlayerDescription(player.GetDescription());
-            //    }
-            //}
-
+         
             else
             {
                 if (GetComponent<Npc_Guard>() != null)
@@ -232,6 +203,7 @@ public class NPC_AI_Sensor : MonoBehaviour
         }
         return true;
     }
+    //create mesh for vision cone
     Mesh CreateWedgeMesh()
     {
         Mesh mesh = new Mesh();
@@ -331,6 +303,7 @@ public class NPC_AI_Sensor : MonoBehaviour
         scanInterval = 1.0f / scanFrequency;
     }
 
+    //debug 
     private void OnDrawGizmos()
     {
         //if (mesh)

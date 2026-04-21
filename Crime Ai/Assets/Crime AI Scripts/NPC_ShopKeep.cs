@@ -4,6 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+///
+///  sound varibales are for nearby npcs should have changed the name earlier but it is now to late 
+///
+
 public enum NPC_SHOPKEEP_STATES
 {
     Idle,
@@ -87,6 +91,7 @@ public class NPC_ShopKeep : MonoBehaviour
         dataCollector.numberOfShopkeeps +=1;
     }
 
+    // Random assign a number to the stats on start
     void GetRandomValues()
     {
         fear = Random.Range(0.0f, 1.0f);
@@ -96,6 +101,7 @@ public class NPC_ShopKeep : MonoBehaviour
         itemValue = Mathf.Round(itemValue * 10.0f) * 0.1f;
     }
 
+    // work out what state npc is in 
     void DeFuzzyfication()
     {
         if(fear==1)
@@ -322,6 +328,7 @@ public class NPC_ShopKeep : MonoBehaviour
 
                 break;
 
+                // Locate and alert guards then return to stall
             case NPC_SHOPKEEP_STATES.SeekHelp:
                 
                 animator.SetBool("Stealing", false);
@@ -418,6 +425,7 @@ public class NPC_ShopKeep : MonoBehaviour
 
                 break;
 
+                //alert nearby npcs
             case NPC_SHOPKEEP_STATES.Shouting:
 
                 animator.SetBool("Stealing", true);
@@ -497,6 +505,7 @@ public class NPC_ShopKeep : MonoBehaviour
 
                 break;
 
+                // move away from player until player out of sight 
             case NPC_SHOPKEEP_STATES.BackUpFromPlayer:
 
                 animator.SetBool("Stealing", false);
@@ -533,6 +542,7 @@ public class NPC_ShopKeep : MonoBehaviour
                 mat.material.SetColor("_BaseColor", Color.gray);
                 break;
 
+                // chase the player dor a set amount of time 
             case NPC_SHOPKEEP_STATES.ChaseOfPlayer:
 
                 animator.SetBool("Stealing", false);
@@ -579,6 +589,7 @@ public class NPC_ShopKeep : MonoBehaviour
         }
     }
 
+    // Random assign a number to the stats on start
     private void RandomlySetStats()
     {
         itemValue = Random.Range(0.0f, 1.0f);
@@ -594,13 +605,16 @@ public class NPC_ShopKeep : MonoBehaviour
     {
         isBeingStolenFrom = true;
 
+        //look at player
         Vector3 lookat;
         lookat.x = player.transform.position.x;
         lookat.y = 0;
         lookat.z = player.transform.position.z;
 
+        // animation stuff
         transform.LookAt(lookat);
 
+        // get value for bystanders nearby
         bystanderEffect = (sensor.bystanderObjects.Count / 2) * 0.1f;
 
         // Debug.Log(bystanderEffect);

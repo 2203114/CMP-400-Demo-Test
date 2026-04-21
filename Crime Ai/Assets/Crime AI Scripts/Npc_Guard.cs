@@ -6,6 +6,11 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
 
+///
+///  sound varibales are for nearby npcs should have changed the name earlier but it is now to late 
+///
+
+
 // Guard npc posible states
 enum NPC_Guard_States
 {
@@ -125,32 +130,16 @@ public class Npc_Guard : MonoBehaviour
     void Update()
     {
 
-        //if (agent.velocity.x != 0 && agent.velocity.y != 0 && agent.velocity.y != 0)
-        //{
-        //    animator.SetFloat("Speed", 0.2f);
-        //}
-        //else
-        //{
-        //    animator.SetFloat("Speed", 0f);
-        //}
-
-        //if (agent.isStopped)
-        //{
-        //    animator.SetFloat("Speed", 0f);
-        //}
-        //else if (!agent.isStopped)
-        //{
-        //    animator.SetFloat("Speed", 0.2f);
-        //}
-
-
+  
         if (alert)
         {
+            // do once when alerted
             if(!justAlerted)
             {
                 DataCollector.SetGuardsAlert(true);
                 justAlerted = true;
             }
+
 
             if(currentState == NPC_Guard_States.Chasing && sensor.objects.Count == 0)
             {
@@ -277,7 +266,7 @@ public class Npc_Guard : MonoBehaviour
 
     void Patroling()
     {
-
+        // get random point depending on state
         switch(currentState)
         {
             case NPC_Guard_States.Patroling:
@@ -329,14 +318,10 @@ public class Npc_Guard : MonoBehaviour
 
         switch (currentState)
         {
-
             case NPC_Guard_States.Patroling:
                 
                 if (isPatrolLeader)
-                {
-                    //float z = Random.Range(-walkRange, walkRange);
-                    //float x = Random.Range(-walkRange, walkRange);
-
+                {                
                     destPoint = new Vector3(transform.position.x + x, transform.position.y, transform.position.z + z);
 
 
@@ -346,10 +331,7 @@ public class Npc_Guard : MonoBehaviour
                     }
                 }
                 else
-                {
-                    //float z = Random.Range(-walkRange, walkRange);
-                    //float x = Random.Range(-walkRange, walkRange);
-
+                {                
                     destPoint = new Vector3(patrolLeader.transform.position.x + x, patrolLeader.transform.position.y, patrolLeader.transform.position.z + z);
 
 
@@ -362,10 +344,7 @@ public class Npc_Guard : MonoBehaviour
                 break;
 
 
-            case NPC_Guard_States.Investigate:
-
-                //float z = Random.Range(-walkRange, walkRange);
-                //float x = Random.Range(-walkRange, walkRange);
+            case NPC_Guard_States.Investigate:             
                 if(lastKnownPlayerLocation==Vector3.zero)
                 {
                     destPoint = new Vector3(crimeScene.x + x, crimeScene.y, crimeScene.z + z);
@@ -374,9 +353,7 @@ public class Npc_Guard : MonoBehaviour
                 {
                     destPoint = new Vector3(lastKnownPlayerLocation.x + x, lastKnownPlayerLocation.y, lastKnownPlayerLocation.z + z);
                 }
-               
-
-
+  
                 if (Physics.Raycast(destPoint, Vector3.down, groundLayer))
                 {
                     walkPointSet = true;
