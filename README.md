@@ -1,6 +1,9 @@
 # CMP-400-Crime AI Artifact
 
 Folder Crime AI Scripts has all the scripts and everything else used in the artifact
+-------------------------------------------------------------------------------------
+In folder Scenes the scene called Final Scene is the scene used for thee artifact
+-------------------------------------------------------------------------------------
 
 This project is a short game where the player is able to steal / commit a crime and the npcs will react and alert guards.
 The player can steal as much as they want while trying to avoid being caught by guards or bystanders trying to assist in capture.
