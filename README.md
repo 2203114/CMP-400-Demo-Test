@@ -2,7 +2,7 @@
 
 Folder Crime AI Scripts has all the scripts and everything else used in the artifact
 -------------------------------------------------------------------------------------
-In folder Scenes the scene called Final Scene is the scene used for thee artifact
+In folder Scenes the scene called Final Scene is the scene used for the artifact
 -------------------------------------------------------------------------------------
 
 This project is a short game where the player is able to steal / commit a crime and the npcs will react and alert guards.
